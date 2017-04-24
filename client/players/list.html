@@ -1,0 +1,10 @@
+<template name="playersList">
+  <ul class="players">
+    {{#each players}}
+      <li class="players__player">
+        <button type="submit" class="players__remove_btn" title="Remove this player">&times;</button>
+        <span class="players__name">{{this}}</span>
+      </li>
+    {{/each}}
+  </ul>
+</template>

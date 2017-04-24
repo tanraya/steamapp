@@ -1,0 +1,10 @@
+<template name="gamesList">
+  <div class="games">
+    {{#each games}}
+      <div class="game">
+        <h5 class="game__title">{{name}}</h5>
+        <img src="http://media.steampowered.com/steamcommunity/public/images/apps/{{appId}}/{{logo}}.jpg" alt="{{name}}" class="game__logo">
+      </div>
+    {{/each}}
+  </div>
+</template>

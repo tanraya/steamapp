@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css?family=Oswald:200,300,400');
+
+body {
+  font-family: 'Oswald', sans-serif;
+  background: rgb(237, 240, 230);
+}
+
+/* Layout */
+.container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background: rgb(237, 240, 230);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.games {
+  padding: 0 15px 15px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+
+

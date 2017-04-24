@@ -1,0 +1,6 @@
+node_modules/
+settings.json
+deploy.sh
+*.txt
+config/config.json
+.meteor/local/

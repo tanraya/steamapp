@@ -1,0 +1,88 @@
+@keyframes playersInit {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Blocks */
+.player_form {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0 0;
+}
+
+.player_form__input {
+  width: 30%;
+  font-family: 'Oswald', sans-serif;
+  padding: 5px;
+  border: 1px solid #777;
+}
+
+.player_form__submit {
+  background: ghostwhite;
+  border: 1px solid #777;
+  border-left: 0;
+  font-family: 'Oswald', sans-serif;
+}
+
+.players {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  cursor: default;
+}
+
+.players__remove_btn {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: #fff;
+  font-size: 19px;
+  font-weight: bold;
+  line-height: 26px;
+  height: 26px;
+
+  &:hover {
+    color: crimson;
+  }
+}
+
+.players__player {
+  background-color: crimson;
+  border-radius: 3px 0 0 3px;
+  color: #fff;
+  display: inline-block;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 20px 0 5px;
+  position: relative;
+  margin: 0 10px 0;
+  text-decoration: none;
+  animation: playersInit 0.6s ease;
+}
+
+.players__player::after {
+  background: rgb(237, 240, 230);
+  border-bottom: 13px solid transparent;
+  border-left: 10px solid crimson;
+  border-top: 13px solid transparent;
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.players__player:hover {
+  background: #000;
+  color: #fff;
+
+  &::after {
+    border-left: 10px solid #000;
+  }
+}
+
+@media screen and (max-width: 462px) {
+  .player_form__input {
+    width: 70%;
+  }
+}
