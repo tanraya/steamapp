@@ -33,6 +33,8 @@ $ cd steamapp/
 
 ```
 
+Далее
+
 ```bash
 $ yarn install
 $ meteor # open http://localhost:3000
