@@ -28,6 +28,20 @@ Meteor.methods({
       }})
     }
 
+    const lookupSteamspy = (appid, timeout = 250) => {
+      steamSpyApi.checkGameIsMultiplayer(appid)
+        .then((isMultiplayer) => {
+          if (isMultiplayer) {
+            upsertGame(game)
+          }
+
+          CachedGames.insert({ appId: Number(appid), multiplayer: isMultiplayer ? 1 : 0 })
+        })
+        .catch(error => lookupSteamspy(appid))
+
+      Meteor._sleepForMs(timeout)
+    }
+
     const upsertGames = (games) => {
       games.forEach((game) => {
         const cachedGame = CachedGames.findOne({ appId: Number(game.appid) })
@@ -37,15 +51,7 @@ Meteor.methods({
             upsertGame(game)
           }
         } else {
-          steamSpyApi.checkGameIsMultiplayer(game.appid).then((isMultiplayer) => {
-            if (isMultiplayer) {
-              upsertGame(game)
-            }
-
-            CachedGames.insert({ appId: Number(game.appid), multiplayer: isMultiplayer ? 1 : 0 })
-          })
-
-          Meteor._sleepForMs(250)
+          lookupSteamspy()
         }
       })
     }
