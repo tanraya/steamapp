@@ -8,14 +8,9 @@ Template.playersList.events({
     })
 
     NProgress.start()
-    Meteor.call('removePlayerGames', Session.get('id'), playerName, (error, result) => {
-      // TODO: Make it pretty
-      if (error) {
-        alert('Cannot remove player games')
-      } else {
-        Session.setPersistent('games', [])
-        NProgress.done()
-      }
+    Meteor.call('reloadGames', Session.get('id'), playerName, Session.get('players').players, (error, games) => {
+      Session.set('games', games)
+      NProgress.done()
     })
   }
 });

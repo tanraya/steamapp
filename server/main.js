@@ -62,9 +62,13 @@ Meteor.methods({
     })
   },
 
-  // Remove player games
-  removePlayerGames: function(sessionId, playerName) {
+  // Reload games
+  reloadGames: function(sessionId, playerName, players) {
     Games.remove({ sessionId: sessionId, playerName: playerName })
+
+    return new Promise((resolve, reject) => {
+      resolve(findMutualGames(sessionId, players))
+    })
   },
 
   getPlayerSummaries: function(steamId) {
