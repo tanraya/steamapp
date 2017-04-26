@@ -1,74 +1,79 @@
 import { Meteor } from 'meteor/meteor'
-import SteamApi from './steam_api'
-import updateMultiplayerGames from './update_multiplayer_games'
+import SteamApi from './api/steam'
+import updateCachedGames from './lib/update_cached_games'
+import findMutualGames from './lib/find_mutual_games'
 
 Meteor.startup(() => {
-  // Load multiplayer games app ids on server start
-  updateMultiplayerGames()
+  updateCachedGames()
 })
 
-// Update multiplayer games list every 5 minutes
-Meteor.setInterval(updateMultiplayerGames, 60000 * 5)
+// Update cached games every day
+Meteor.setInterval(updateCachedGames, 60000 * 60 * 24)
 
-Meteor.publish('games', function(totalPlayers) {
-  // Use MongoDB aggregation framework to filter games list
-  ReactiveAggregate(this, Games, [
-    {
-      $group: {
-        _id: { name: "$name" },
-        logo: { $first: "$logo" },
-        name: { $first: "$name" },
-        appId: { $first: "$appId" },
-        count: { $sum: 1 }
-      }
-    },
+import SteamSpyApi from './api/steamspy'
 
-    {
-      $match: { count: { $gte: totalPlayers } }
-    },
-
-    {
-      $sort : { name: 1 }
-    },
-
-    {
-      $project: {
-        _id: "$name",
-        name: "$name",
-        logo: "$logo",
-        appId: "$appId"
-      }
-    }
-  ])
-})
+const steamApi = new SteamApi
+const steamSpyApi = new SteamSpyApi
 
 Meteor.methods({
   // Add games list with `playerName` games
-  addGames: function(playerName) {
-    const multiplayerGames = MultiplayerGames.find().map(x => x.appId)
-    const steamApi = new SteamApi
+  addGames: function(sessionId, playerName, players) {
+    const upsertGame = ({ appid, name, img_logo_url }) => {
+      Games.upsert({ appId: appid, playerName: playerName, sessionId: sessionId }, { $set: {
+        sessionId: sessionId,
+        appId: Number(appid),
+        playerName: playerName,
+        name: name,
+        logo: img_logo_url
+      }})
+    }
 
-    steamApi.getPlayerGames(playerName)
-      .then(games => {
-        games.forEach(({ appid, name, img_logo_url }) => {
-          // Do not insert non-multiplayer games
-          if (!multiplayerGames.includes(appid)) { return }
+    const upsertGames = (games) => {
+      games.forEach((game) => {
+        const cachedGame = CachedGames.findOne({ appId: Number(game.appid) })
 
-          Games.upsert({ appId: appid, playerName: playerName }, { $set: {
-            appId: Number(appid),
-            playerName: playerName,
-            name: name,
-            logo: img_logo_url
-          }})
+        if (cachedGame) {
+          if (cachedGame.multiplayer == 1) {
+            upsertGame(game)
+          }
+        } else {
+          steamSpyApi.checkGameIsMultiplayer(game.appid).then((isMultiplayer) => {
+            if (isMultiplayer) {
+              upsertGame(game)
+            }
+
+            CachedGames.insert({ appId: Number(game.appid), multiplayer: isMultiplayer ? 1 : 0 })
+          })
+
+          Meteor._sleepForMs(250)
+        }
+      })
+    }
+
+    return new Promise((resolve, reject) => {
+      steamApi.getPlayerGames(playerName)
+        .then(games => {
+          upsertGames(games)
+          resolve(findMutualGames(sessionId, players))
         })
-      })
-      .catch(error => {
-        throw new Meteor.Error(error)
-      })
+        .catch(error => {
+          reject(error)
+        })
+    })
   },
 
   // Remove player games
-  removePlayerGames: function(playerName) {
-    Games.remove({ playerName: playerName })
+  removePlayerGames: function(sessionId, playerName) {
+    Games.remove({ sessionId: sessionId, playerName: playerName })
+  },
+
+  getPlayerSummaries: function(steamId) {
+    return steamApi.getPlayerSummaries(steamId)
+  },
+
+  getGames: function(sessionId, players) {
+    return new Promise((resolve, reject) => {
+      resolve(findMutualGames(sessionId, players))
+    })
   }
 })

@@ -1,6 +1,17 @@
 <template name="newPlayer">
-  <form class="player_form">
-    <input type="text" autofocus name="text" placeholder="Enter Steam profile url or nickname" class="player_form__input">
-    <button type="submit" class="player_form__submit">Add player</button>
+  <h4 class="player_form__title">Find multiplayer games you can play together with other Steam players!</h4>
+
+  <div class="player_form__description">
+    Add your nickname or profile url and other guys profile urls or nicknames to see the games you can play together.
+  </div>
+
+  <form class="player_form js-player_form">
+    <div class="player_form__input_wrapper">
+      <input type="text" autofocus name="text" placeholder="Enter Steam profile url or nickname" class="player_form__input"><button type="submit" class="player_form__submit">Add player</button>
+    </div>
+
+    <div class="player_form__hint">
+      Example: <span data-input="hwestar">hwestar</span> or <span data-input="http://steamcommunity.com/id/hwestar">http://steamcommunity.com/id/hwestar</span>
+    </div>
   </form>
 </template>

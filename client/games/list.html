@@ -1,10 +1,14 @@
 <template name="gamesList">
   <div class="games">
     {{#each games}}
-      <div class="game">
-        <h5 class="game__title">{{name}}</h5>
-        <img src="http://media.steampowered.com/steamcommunity/public/images/apps/{{appId}}/{{logo}}.jpg" alt="{{name}}" class="game__logo">
-      </div>
+      <a href="http://store.steampowered.com/app/{{appId}}" class="game">
+        <span class="game__title">{{name}}</span>
+        {{#if logo}}
+          <img src="http://media.steampowered.com/steamcommunity/public/images/apps/{{appId}}/{{logo}}.jpg" alt="{{name}}" class="game__logo">
+        {{else}}
+          <img src="/public/images.no-logo.jpg" class="game__logo">
+        {{/if}}
+      </a>
     {{/each}}
   </div>
 </template>

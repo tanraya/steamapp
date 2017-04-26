@@ -19,7 +19,7 @@
   flex-direction: column;
   border-radius: 3px;
   max-width: 184px;
-  cursor: default;
+  text-decoration: none;
   animation: gameInit 0.7s ease;
 
   &:hover {
@@ -30,11 +30,12 @@
 .game__title {
   text-align: center;
   font-weight: 300;
-  font-size: 13px;
+  font-size: 15px;
   margin: 0 0 10px;
   flex-grow: 1;
   color: crimson;
   text-shadow: 0px -1px rgba(255,255,255, 0.7);
+  display: block;
 }
 
 .game__logo {

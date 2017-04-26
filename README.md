@@ -12,31 +12,7 @@
 ```bash
 $ git clone https://github.com/tanraya/steamapp.git
 $ cd steamapp/
-```
-
-Создайте файл `config/settings.json` и положите туда это:
-
-```json
-{
-  "key": "<STEAM_API_KEY>",
-  "endpoint": "http://api.steampowered.com",
-  "steamApi": {
-    "urls": {
-      "steamId": "ISteamUser/ResolveVanityURL/v0001",
-      "userGames": "IPlayerService/GetOwnedGames/v0001"
-    }
-  },
-  "steamspyApi": {
-    "url": "http://steamspy.com/api.php?request=genre&genre=Multiplayer"
-  }
-}
-
-```
-
-Далее
-
-```bash
 $ yarn install
-$ meteor # open http://localhost:3000
+$ KEY=<STEAM_API_KEY> meteor # open http://localhost:3000
 ```
 

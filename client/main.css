@@ -27,5 +27,8 @@ body {
   justify-content: center;
 }
 
-
+/* Hide NProgress spinner */
+[role="spinner"] {
+  visibility: hidden;
+}
 
